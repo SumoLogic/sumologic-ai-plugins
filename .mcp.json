@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "sumo-logic": {
+      "type": "http",
+      "url": "${user_config.mcp_url}",
+      "oauth": {
+        "callbackPort": 8888
+      }
+    }
+  }
+}
