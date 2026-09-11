@@ -6,7 +6,6 @@ AI coding tool plugins for [Sumo Logic](https://www.sumologic.com) — connectin
 
 - **MCP tools** — `runLogSearch`, `listPartitions`, `listCustomFields`, `listExtractionRules`, dashboards, alerts, SIEM insights, and detection rules
 - **`/sumo-investigator`** — Senior investigation agent that answers natural language operational questions using Sumo Logic platform data
-- **`/sumosetup`** — Guided first-time setup for connecting to your Sumo Logic deployment
 
 ## Prerequisites
 
