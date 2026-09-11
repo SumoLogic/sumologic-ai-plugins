@@ -1,29 +1,16 @@
 # Sumo Logic AI Plugins
 
-AI coding tool plugins for [Sumo Logic](https://www.sumologic.com) — connecting Claude Code, Cursor, and other AI development tools to the Sumo Logic observability platform.
+AI coding tool plugins for [Sumo Logic](https://www.sumologic.com) — connecting GitHub Copilot, Claude Code, and other AI development tools to the Sumo Logic observability platform.
 
-## Claude Code Plugin
-
-Connects Claude Code to Sumo Logic via MCP (Model Context Protocol). Investigate logs, analyze incidents, check alerts, review security insights, create detection rules, and manage dashboards — all from your terminal.
-
-### What You Get
+## What You Get
 
 - **MCP tools** — `runLogSearch`, `listPartitions`, `listCustomFields`, `listExtractionRules`, dashboards, alerts, SIEM insights, and detection rules
-- **`/sumologic-mcp:sumo-investigator`** — Senior investigation agent that answers natural language operational questions using Sumo Logic platform data
+- **`/sumo-investigator`** — Senior investigation agent that answers natural language operational questions using Sumo Logic platform data
 
-### Prerequisites
+## Prerequisites
 
-- [Claude Code](https://code.claude.com/docs/en/quickstart) installed and authenticated
 - Sumo Logic account with credentials (any role — no admin required for CIMD)
 - Your deployment's MCP server URL (see table below)
-
-### Installation
-
-```
-/plugin install sumologic-mcp@claude-community
-```
-
-On first enable, Claude Code prompts for your MCP Server URL:
 
 | Region | MCP Server URL |
 |--------|----------------|
@@ -36,6 +23,60 @@ On first enable, Claude Code prompts for your MCP Server URL:
 | Asia Pacific (Seoul) | `https://mcp.kr.sumologic.com/mcp` |
 | Canada (Central) | `https://mcp.ca.sumologic.com/mcp` |
 | FedRAMP (US East) | `https://mcp.fed.sumologic.com/mcp` |
+
+---
+
+## GitHub Copilot
+
+Works with both the VS Code Copilot extension and Copilot CLI from a single plugin.
+
+### Installation
+
+**VS Code:**
+1. Open the Extensions activity bar
+2. Enter `@agentPlugins sumo-logic` in the search field
+3. Select the Sumo Logic plugin and click **Install**
+
+**Copilot CLI:**
+```
+copilot plugin install sumo-logic@awesome-copilot
+```
+
+### First-time setup
+
+After installation, run `/sumosetup` in Copilot chat. The skill will:
+1. Ask which Sumo Logic deployment you use
+2. Configure the MCP server with the correct endpoint
+3. Guide you through OAuth authentication
+
+### Usage
+
+Ask naturally about your Sumo Logic data:
+
+```
+Show me error logs from the last hour
+What alerts are currently triggered?
+Are there any critical security insights from today?
+List my dashboards
+```
+
+Or invoke the investigation skill directly:
+
+```
+/sumo-investigator what errors are happening in the API gateway?
+```
+
+---
+
+## Claude Code
+
+### Installation
+
+```
+/plugin install sumologic-mcp@claude-community
+```
+
+On first enable, Claude Code prompts for your MCP Server URL from the table above.
 
 ### Authentication
 
@@ -72,8 +113,6 @@ claude mcp add --scope user --transport http \
   sumo-logic "https://mcp.sumologic.com/mcp"
 ```
 
-> **Note:** Recent VS Code releases do not support explicit client credentials. Use the default CIMD setup for VS Code.
-
 ### Usage
 
 #### Investigation Skill
@@ -96,9 +135,11 @@ Show me critical security insights from this week
 List dashboards related to kubernetes
 ```
 
+---
+
 ## Development
 
-Test the plugin locally:
+Test the Claude Code plugin locally:
 
 ```bash
 claude --plugin-dir .
