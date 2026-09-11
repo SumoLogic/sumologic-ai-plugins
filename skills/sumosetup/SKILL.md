@@ -22,8 +22,8 @@ Read [references/mcp-settings.md](references/mcp-settings.md) before proceeding.
 Check the `sumo-server-state` (see `mcp-settings.md`):
 
 - **working** — continue with the user's request without mentioning this check.
-- **not-working** — without any preamble, tell the user the server is set up but not working, suggest they run `/sumosetup` again to reconfigure, and stop.
-- **not-setup** — the server needs first-time setup. Do **not** attempt to gather data using a different approach. Do **not** attempt any further MCP calls: they will fail until setup is complete.
+- **not-working** — follow the **Troubleshooting** section below.
+- **not-setup** — follow the **First-time setup** section below.
 
 When communicating with the user below, describe the server state in plain language. Do not reveal what was checked, what was found, or any implementation details like file contents or variable values.
 
@@ -40,9 +40,13 @@ Sumo Logic is an observability and security platform. After this skill completes
 
 These MCP tools are the primary way to access Sumo Logic data from within the AI client. Until setup is complete, **none of these tools exist**. The agent cannot see them, list them, or call them.
 
-#### Steps
+---
 
-Follow these steps in order:
+### First-time setup
+
+#### Copilot (VS Code or CLI)
+
+If the registration file (`.copilot-mcp.json`) contains the `not-setup` sentinel, follow these steps:
 
 1. **Ask for the deployment.** Tell the user the Sumo Logic MCP server needs to be set up. Present the available deployments and their MCP domains from `mcp-settings.md`, and ask which deployment they use. The user may respond with a deployment code, an MCP domain directly, a Sumo Logic URL, or something else — use the mapping rules in `mcp-settings.md` to resolve the answer to an MCP domain. Ask for clarification if ambiguous.
 
@@ -71,3 +75,40 @@ Follow these steps in order:
    > 3. **Verify** — after authentication, try asking a question like "show me recent error logs" to confirm the connection is working.
 
    Then stop. Do not attempt any MCP calls — the server will not be available until the user reloads.
+
+#### Claude Code
+
+If there is no registration file or no `not-setup` sentinel (the server is configured but not connected), guide the user through Claude Code's native setup:
+
+1. Tell the user the Sumo Logic MCP server needs to be connected, and instruct them:
+
+   > To connect the Sumo Logic MCP server:
+   >
+   > 1. Run `/mcp` in Claude Code
+   > 2. Select **sumo-logic** from the server list
+   > 3. Select **Authenticate** — a browser window will open for you to log in with your Sumo Logic credentials
+   > 4. After authentication, run `/mcp` again to confirm the server shows as **connected**
+   >
+   > If `sumo-logic` does not appear in the server list, install the plugin first:
+   > ```
+   > /plugin install sumologic-mcp@claude-community
+   > ```
+
+   Then stop. Do not attempt any MCP calls until the user confirms the server is connected.
+
+---
+
+### Troubleshooting
+
+If the server is configured but not working (`sumo-server-state` is **not-working**):
+
+1. Tell the user the Sumo Logic server is configured but not currently connected.
+2. Suggest the following steps:
+
+   > The Sumo Logic MCP server is configured but not responding. Try these steps:
+   >
+   > 1. **Re-authenticate** — your session may have expired. In VS Code or Copilot CLI, use `/mcp` to select the server and re-authenticate. In Claude Code, run `/mcp` → select **sumo-logic** → **Clear authentication** → **Authenticate**.
+   > 2. **Check the deployment URL** — make sure the configured URL matches your Sumo Logic deployment region.
+   > 3. **Run `/sumosetup` again** — this will reconfigure the server from scratch.
+
+   Then stop.
