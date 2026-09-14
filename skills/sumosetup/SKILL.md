@@ -46,7 +46,7 @@ These MCP tools are the primary way to access Sumo Logic data from within the AI
 
 #### Copilot (VS Code or CLI)
 
-If the registration file (`.copilot-mcp.json`) contains the `not-setup` sentinel, follow these steps:
+If the registration file (`mcp.json`) contains the `not-setup` sentinel, follow these steps:
 
 1. **Ask for the deployment.** Tell the user the Sumo Logic MCP server needs to be set up. Present the available deployments and their MCP domains from `mcp-settings.md`, and ask which deployment they use. The user may respond with a deployment code, an MCP domain directly, a Sumo Logic URL, or something else — use the mapping rules in `mcp-settings.md` to resolve the answer to an MCP domain. Ask for clarification if ambiguous.
 

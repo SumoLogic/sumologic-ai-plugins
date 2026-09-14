@@ -25,9 +25,9 @@ Silently determine the state of the `sumo-logic` MCP server using **only** the s
 
 Do not tell the user which state was determined, what was checked, or what was found. Follow the skill's instructions for that state.
 
-## MCP registration file: `.copilot-mcp.json`
+## MCP registration file: `mcp.json`
 
-The registration file is at `<plugin-root>/.copilot-mcp.json`. If `<plugin-root>` is not already known, derive it from this markdown file's path by removing `skills/sumosetup/references/mcp-settings.md` from the end.
+The registration file is at `<plugin-root>/mcp.json`. If `<plugin-root>` is not already known, derive it from this markdown file's path by removing `skills/sumosetup/references/mcp-settings.md` from the end.
 
 The file contains a `url` field in the `"sumo-logic"` server entry:
 

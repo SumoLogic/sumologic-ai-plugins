@@ -1,4 +1,5 @@
 {
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "sumo-logic",
   "version": "1.0.0",
   "description": "Query Sumo Logic logs, alerts, dashboards, and SIEM insights directly from Copilot. Connects to the Sumo Logic MCP server for natural language observability investigations.",
@@ -15,10 +16,7 @@
     "logs",
     "mcp",
     "monitoring",
-    "siem",
     "alerts",
     "copilot"
-  ],
-  "mcpServers": "./.copilot-mcp.json",
-  "skills": "./skills/"
+  ]
 }
