@@ -26,6 +26,35 @@ AI coding tool plugins for [Sumo Logic](https://www.sumologic.com) — connectin
 
 ---
 
+## Kiro IDE
+
+### Installation
+
+Install the Sumo Logic Power from the [Kiro Powers directory](https://kiro.dev/powers/):
+
+1. Open Kiro IDE
+2. Search for **Sumo Logic** in the Powers panel
+3. Install the power
+
+### Authentication
+
+Authentication setup depends on your organization's configuration. Contact your Sumo Logic administrator for the appropriate MCP server URL and authentication method for your deployment region (see the deployment table above).
+
+### Usage
+
+Ask naturally about your Sumo Logic data:
+
+```
+Show me error logs from the last hour
+What alerts are currently triggered?
+Are there any critical security insights from today?
+List my dashboards
+```
+
+The power includes steering files that guide Kiro through the correct investigation workflow — including the mandatory 3-step log search process (Discover → Sample → Targeted Query).
+
+---
+
 ## GitHub Copilot
 
 Works with both the VS Code Copilot extension and Copilot CLI from a single plugin.
@@ -150,6 +179,12 @@ Validate before submission:
 ```bash
 claude plugin validate .
 ```
+
+## Privacy & Support
+
+- **Privacy Policy**: [Sumo Logic Privacy Statement](https://www.sumologic.com/privacy-statement/)
+- **Support**: [Sumo Logic Support](https://support.sumologic.com/)
+- **Documentation**: [Sumo Logic MCP Server Docs](https://www.sumologic.com/help/docs/api/mcp-server/)
 
 ## License
 
