@@ -26,6 +26,42 @@ AI coding tool plugins for [Sumo Logic](https://www.sumologic.com) — connectin
 
 ---
 
+## Kiro IDE
+
+### Installation
+
+The Kiro Power lives in [`kiro-power/`](kiro-power/). Install it from the Kiro Powers panel (search **Sumo Logic**), or add it from this repository's GitHub URL.
+
+### Authentication
+
+OAuth 2.0 with a Sumo Logic-hosted CIMD document (`oauth.clientMetadataUrl`), because Kiro does not yet host its own ([kirodotdev/Kiro#11076](https://github.com/kirodotdev/Kiro/issues/11076)). Works in both Kiro IDE and Kiro CLI.
+
+The power ships with a `${SUMO_LOGIC_MCP_HOST}` placeholder for your deployment's MCP host (the `mcp.<region>.sumologic.com` host from the table above, for example `mcp.eu.sumologic.com`):
+
+1. Open `~/.kiro/settings/mcp.json` and replace both `${SUMO_LOGIC_MCP_HOST}` occurrences with your host, then save. Kiro reconnects automatically.
+2. Log in with your Sumo Logic credentials when the browser opens.
+
+Alternatively, set the `SUMO_LOGIC_MCP_HOST` environment variable, launch Kiro from that environment (e.g. `export SUMO_LOGIC_MCP_HOST=mcp.sumologic.com && open -a Kiro`), and approve the variable when Kiro prompts.
+
+If you later switch deployments, clear the stored authentication for the `sumo-logic` server in Kiro's MCP panel first.
+
+On first use, Kiro's agent will also walk you through this.
+
+### Usage
+
+Ask naturally about your Sumo Logic data:
+
+```
+Show me error logs from the last hour
+What alerts are currently triggered?
+Are there any critical security insights from today?
+List my dashboards
+```
+
+The power includes steering files that guide Kiro through the correct investigation workflow — including the mandatory 3-step log search process (Discover → Sample → Targeted Query).
+
+---
+
 ## GitHub Copilot
 
 Works with both the VS Code Copilot extension and Copilot CLI from a single plugin.
@@ -150,6 +186,12 @@ Validate before submission:
 ```bash
 claude plugin validate .
 ```
+
+## Privacy & Support
+
+- **Privacy Policy**: [Sumo Logic Privacy Statement](https://www.sumologic.com/privacy-statement/)
+- **Support**: [Sumo Logic Support](https://support.sumologic.com/)
+- **Documentation**: [Sumo Logic MCP Server Docs](https://www.sumologic.com/help/docs/api/mcp-server/)
 
 ## License
 
