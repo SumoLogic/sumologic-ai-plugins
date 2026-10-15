@@ -36,30 +36,44 @@ You are enhanced with the **Sumo Logic MCP Server**, providing direct access to 
 ### Prerequisites
 
 - A Sumo Logic account (any role — no admin required)
-- Your deployment's MCP server URL
+- Your deployment's MCP host (see table below)
 
-### Deployment URLs
+### Step 1 — Pick the deployment (agent: do this first)
 
-| Region | MCP Server URL |
-|--------|----------------|
-| US East (N. Virginia) | `https://mcp.sumologic.com/mcp` |
-| US West (Oregon) | `https://mcp.us2.sumologic.com/mcp` |
-| Europe (Ireland) | `https://mcp.eu.sumologic.com/mcp` |
-| Europe (Frankfurt) | `https://mcp.de.sumologic.com/mcp` |
-| Asia Pacific (Tokyo) | `https://mcp.jp.sumologic.com/mcp` |
-| Asia Pacific (Sydney) | `https://mcp.au.sumologic.com/mcp` |
-| Asia Pacific (Seoul) | `https://mcp.kr.sumologic.com/mcp` |
-| Canada (Central) | `https://mcp.ca.sumologic.com/mcp` |
-| FedRAMP (US East) | `https://mcp.fed.sumologic.com/mcp` |
+If the `sumo-logic` MCP server is not connected and `SUMO_LOGIC_MCP_HOST` is not set, ask the user which Sumo Logic deployment they use. Resolve their answer (region name, deployment code, or a Sumo Logic URL) to an MCP host from this table. Ask for clarification if ambiguous.
 
-### Authentication
+| Region | Deployment | `SUMO_LOGIC_MCP_HOST` |
+|--------|------------|-----------------------|
+| US East (N. Virginia) | us1 | `mcp.sumologic.com` |
+| US West (Oregon) | us2 | `mcp.us2.sumologic.com` |
+| Europe (Ireland) | dub | `mcp.eu.sumologic.com` |
+| Europe (Frankfurt) | fra | `mcp.de.sumologic.com` |
+| Asia Pacific (Tokyo) | tky | `mcp.jp.sumologic.com` |
+| Asia Pacific (Sydney) | syd | `mcp.au.sumologic.com` |
+| Asia Pacific (Seoul) | kor | `mcp.kr.sumologic.com` |
+| Canada (Central) | mon | `mcp.ca.sumologic.com` |
+| FedRAMP (US East) | fed | `mcp.fed.sumologic.com` |
 
-The power authenticates with OAuth 2.0 (authorization code + PKCE) using a Sumo Logic-hosted Client ID Metadata Document (CIMD). No client ID, secret, or admin setup is needed. Kiro does not yet host its own CIMD document ([kirodotdev/Kiro#11076](https://github.com/kirodotdev/Kiro/issues/11076)), so `mcp.json` points `oauth.clientMetadataUrl` at Sumo Logic's.
+### Step 2 — Set the host variable
 
-The shipped `mcp.json` targets US East (`mcp.sumologic.com`). For any other deployment, change **both** hostnames in the `sumo-logic` entry to your region's MCP host from the table above:
+Tell the user to set `SUMO_LOGIC_MCP_HOST` to the host from Step 1 and restart Kiro from an environment that has it:
 
-| Setting | Value |
-|---------|-------|
+- **macOS / Linux:** `export SUMO_LOGIC_MCP_HOST=<host>` in the shell, then launch Kiro from that shell (for example `open -a Kiro` on macOS). GUI launches do not read shell profiles.
+- **Windows (PowerShell):** `setx SUMO_LOGIC_MCP_HOST "<host>"`, then restart Kiro.
+
+When Kiro asks to approve the `SUMO_LOGIC_MCP_HOST` environment variable, approve it (it is also listed under "Mcp Approved Env Vars" in settings).
+
+Then stop. Do not attempt any MCP calls until the user has restarted Kiro and the server is connected.
+
+### Step 3 — Authenticate
+
+The power authenticates with OAuth 2.0 (authorization code + PKCE) using a Sumo Logic-hosted Client ID Metadata Document (CIMD). No client ID, secret, or admin setup is needed. Kiro does not yet host its own CIMD document ([kirodotdev/Kiro#11076](https://github.com/kirodotdev/Kiro/issues/11076)), so `mcp.json` points `oauth.clientMetadataUrl` at `https://<host>/oauth/kiro-client-metadata`.
+
+Connect the `sumo-logic` server from Kiro's MCP Servers panel. A browser opens to log in with your Sumo Logic credentials. If your org uses an identity provider, click "Sign in with your identity provider".
+
+`oauth.redirectUri` is pinned to `http://localhost:8890/oauth/callback`. It must stay on `localhost` (not `127.0.0.1`).
+
+---------|-------|
 | `url` | `https://<mcp-host>/mcp` |
 | `oauth.clientMetadataUrl` | `https://<mcp-host>/oauth/kiro-client-metadata` |
 | `oauth.redirectUri` | `http://localhost:8890/oauth/callback` (keep as-is; must use `localhost`, not `127.0.0.1`) |

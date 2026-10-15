@@ -2,9 +2,9 @@
   "mcpServers": {
     "sumo-logic": {
       "type": "http",
-      "url": "https://mcp.sumologic.com/mcp",
+      "url": "https://${SUMO_LOGIC_MCP_HOST}/mcp",
       "oauth": {
-        "clientMetadataUrl": "https://mcp.sumologic.com/oauth/kiro-client-metadata",
+        "clientMetadataUrl": "https://${SUMO_LOGIC_MCP_HOST}/oauth/kiro-client-metadata",
         "redirectUri": "http://localhost:8890/oauth/callback"
       }
     }
