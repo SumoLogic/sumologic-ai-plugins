@@ -30,15 +30,11 @@ AI coding tool plugins for [Sumo Logic](https://www.sumologic.com) — connectin
 
 ### Installation
 
-Install the Sumo Logic Power from the [Kiro Powers directory](https://kiro.dev/powers/):
-
-1. Open Kiro IDE
-2. Search for **Sumo Logic** in the Powers panel
-3. Install the power
+The Kiro Power lives in [`kiro-power/`](kiro-power/). Install it from the Kiro Powers panel (search **Sumo Logic**), or add it from this repository's GitHub URL.
 
 ### Authentication
 
-Authentication setup depends on your organization's configuration. Contact your Sumo Logic administrator for the appropriate MCP server URL and authentication method for your deployment region (see the deployment table above).
+OAuth 2.0 with a Sumo Logic-hosted CIMD document (`oauth.clientMetadataUrl`), because Kiro does not yet host its own ([kirodotdev/Kiro#11076](https://github.com/kirodotdev/Kiro/issues/11076)). The shipped `kiro-power/mcp.json` targets US East; for other regions replace the hostname in `url` and `clientMetadataUrl` with your region's host from the table above (`https://<mcp-host>/oauth/kiro-client-metadata`). Keep `redirectUri` on `localhost`. Works in both Kiro IDE and Kiro CLI.
 
 ### Usage
 

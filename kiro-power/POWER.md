@@ -54,7 +54,17 @@ You are enhanced with the **Sumo Logic MCP Server**, providing direct access to 
 
 ### Authentication
 
-Authentication configuration is deployment-specific. See your organization's setup instructions for configuring OAuth or access token authentication with the MCP server URL above.
+The power authenticates with OAuth 2.0 (authorization code + PKCE) using a Sumo Logic-hosted Client ID Metadata Document (CIMD). No client ID, secret, or admin setup is needed. Kiro does not yet host its own CIMD document ([kirodotdev/Kiro#11076](https://github.com/kirodotdev/Kiro/issues/11076)), so `mcp.json` points `oauth.clientMetadataUrl` at Sumo Logic's.
+
+The shipped `mcp.json` targets US East (`mcp.sumologic.com`). For any other deployment, change **both** hostnames in the `sumo-logic` entry to your region's MCP host from the table above:
+
+| Setting | Value |
+|---------|-------|
+| `url` | `https://<mcp-host>/mcp` |
+| `oauth.clientMetadataUrl` | `https://<mcp-host>/oauth/kiro-client-metadata` |
+| `oauth.redirectUri` | `http://localhost:8890/oauth/callback` (keep as-is; must use `localhost`, not `127.0.0.1`) |
+
+On first use, Kiro opens a browser to log in with your Sumo Logic credentials. If your org uses an identity provider, click "Sign in with your identity provider".
 
 ---
 
