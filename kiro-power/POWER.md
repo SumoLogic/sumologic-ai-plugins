@@ -54,16 +54,25 @@ If the `sumo-logic` MCP server is not connected and `SUMO_LOGIC_MCP_HOST` is not
 | Canada (Central) | mon | `mcp.ca.sumologic.com` |
 | FedRAMP (US East) | fed | `mcp.fed.sumologic.com` |
 
-### Step 2 — Set the host variable
+### Step 2 — Apply the host (agent: guide the user, do not edit the file yourself)
 
-Tell the user to set `SUMO_LOGIC_MCP_HOST` to the host from Step 1 and restart Kiro from an environment that has it:
+Kiro does not let the agent edit its MCP settings, so the user makes one small edit. The power registers the server in `~/.kiro/settings/mcp.json` (Windows: `%USERPROFILE%\.kiro\settings\mcp.json`) as `power-kiro-power-sumo-logic`, with `${SUMO_LOGIC_MCP_HOST}` in two places. Open that file for the user if you can, and tell them to replace **both** occurrences of `${SUMO_LOGIC_MCP_HOST}` with the host from Step 1 and save. For example, for Europe (Ireland):
 
-- **macOS / Linux:** `export SUMO_LOGIC_MCP_HOST=<host>` in the shell, then launch Kiro from that shell (for example `open -a Kiro` on macOS). GUI launches do not read shell profiles.
-- **Windows (PowerShell):** `setx SUMO_LOGIC_MCP_HOST "<host>"`, then restart Kiro.
+```json
+"url": "https://mcp.eu.sumologic.com/mcp",
+"oauth": {
+  "clientMetadataUrl": "https://mcp.eu.sumologic.com/oauth/kiro-client-metadata",
+  "redirectUri": "http://localhost:8890/oauth/callback"
+}
+```
 
-When Kiro asks to approve the `SUMO_LOGIC_MCP_HOST` environment variable, approve it (it is also listed under "Mcp Approved Env Vars" in settings).
+Leave `redirectUri` unchanged. Kiro reconnects automatically when the file is saved; no restart is needed.
 
-Then stop. Do not attempt any MCP calls until the user has restarted Kiro and the server is connected.
+**Changing deployment later:** Kiro keeps the stored login under the same server name regardless of host, so a login from one deployment can be replayed to another and fail with `invalid_grant`. Before switching, clear the stored authentication for the `sumo-logic` server in Kiro's MCP panel (or remove and re-import the power), then change the host.
+
+**Alternative (environment variable):** if the user prefers not to edit the file, have them set `SUMO_LOGIC_MCP_HOST=<host>` (`export` in a shell and launch Kiro from it, for example `open -a Kiro` on macOS; `setx` on Windows), restart Kiro, and approve the variable when prompted (also under "Mcp Approved Env Vars" in settings).
+
+Then stop. Do not attempt any MCP calls until the server is connected.
 
 ### Step 3 — Authenticate
 

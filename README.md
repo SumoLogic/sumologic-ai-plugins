@@ -36,11 +36,14 @@ The Kiro Power lives in [`kiro-power/`](kiro-power/). Install it from the Kiro P
 
 OAuth 2.0 with a Sumo Logic-hosted CIMD document (`oauth.clientMetadataUrl`), because Kiro does not yet host its own ([kirodotdev/Kiro#11076](https://github.com/kirodotdev/Kiro/issues/11076)). Works in both Kiro IDE and Kiro CLI.
 
-The power reads your deployment from the `SUMO_LOGIC_MCP_HOST` environment variable (the `mcp.<region>.sumologic.com` host from the table above, for example `mcp.eu.sumologic.com`):
+The power ships with a `${SUMO_LOGIC_MCP_HOST}` placeholder for your deployment's MCP host (the `mcp.<region>.sumologic.com` host from the table above, for example `mcp.eu.sumologic.com`):
 
-1. Set it and launch Kiro from that environment, e.g. `export SUMO_LOGIC_MCP_HOST=mcp.sumologic.com && open -a Kiro`
-2. Approve the variable when Kiro prompts
-3. Connect the `sumo-logic` server and log in
+1. Open `~/.kiro/settings/mcp.json` and replace both `${SUMO_LOGIC_MCP_HOST}` occurrences with your host, then save. Kiro reconnects automatically.
+2. Log in with your Sumo Logic credentials when the browser opens.
+
+Alternatively, set the `SUMO_LOGIC_MCP_HOST` environment variable, launch Kiro from that environment (e.g. `export SUMO_LOGIC_MCP_HOST=mcp.sumologic.com && open -a Kiro`), and approve the variable when Kiro prompts.
+
+If you later switch deployments, clear the stored authentication for the `sumo-logic` server in Kiro's MCP panel first.
 
 On first use, Kiro's agent will also walk you through this.
 
