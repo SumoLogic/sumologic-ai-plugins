@@ -30,22 +30,19 @@ AI coding tool plugins for [Sumo Logic](https://www.sumologic.com) — connectin
 
 ### Installation
 
-The Kiro Power lives in [`kiro-power/`](kiro-power/). Install it from the Kiro Powers panel (search **Sumo Logic**), or add it from this repository's GitHub URL.
+The Kiro Power is built to the [Agent Plugins v1.0.0](https://agent-plugins.org/) specification. Add it from this repository's GitHub URL in the Kiro Powers panel (**Add Custom Power** → **Import power from GitHub**). It will also be searchable as **Sumo Logic** once listed in the Kiro Powers directory.
 
-### Authentication
+### First-time setup
 
-OAuth 2.0 with a Sumo Logic-hosted CIMD document (`oauth.clientMetadataUrl`), because Kiro does not yet host its own ([kirodotdev/Kiro#11076](https://github.com/kirodotdev/Kiro/issues/11076)). Works in both Kiro IDE and Kiro CLI.
+After installation, ask Kiro to set up Sumo Logic. The built-in `sumosetup` skill will:
 
-The power ships with a `${SUMO_LOGIC_MCP_HOST}` placeholder for your deployment's MCP host (the `mcp.<region>.sumologic.com` host from the table above, for example `mcp.eu.sumologic.com`):
+1. Ask which Sumo Logic deployment you use and configure the MCP server endpoint automatically
+2. Guide you through OAuth 2.0 authentication (no client ID or admin setup required — uses a Sumo Logic-hosted CIMD document)
+3. Verify the connection is working
 
-1. Open `~/.kiro/settings/mcp.json` and replace both `${SUMO_LOGIC_MCP_HOST}` occurrences with your host, then save. Kiro reconnects automatically.
-2. Log in with your Sumo Logic credentials when the browser opens.
+Kiro also shows the power's own placeholder `sumo-logic` server as failed; ignore or disable it. The server written by setup is the one that connects. This is a Kiro limitation: powers cannot declare OAuth settings in their `mcp.json` ([kirodotdev/Kiro#11964](https://github.com/kirodotdev/Kiro/issues/11964)).
 
-Alternatively, set the `SUMO_LOGIC_MCP_HOST` environment variable, launch Kiro from that environment (e.g. `export SUMO_LOGIC_MCP_HOST=mcp.sumologic.com && open -a Kiro`), and approve the variable when Kiro prompts.
-
-If you later switch deployments, clear the stored authentication for the `sumo-logic` server in Kiro's MCP panel first.
-
-On first use, Kiro's agent will also walk you through this.
+If you later switch deployments, clear the stored authentication for the `sumo-logic` server in Kiro's MCP panel first, then run setup again.
 
 ### Usage
 
@@ -58,7 +55,7 @@ Are there any critical security insights from today?
 List my dashboards
 ```
 
-The power includes steering files that guide Kiro through the correct investigation workflow — including the mandatory 3-step log search process (Discover → Sample → Targeted Query).
+The `sumo-investigator` skill guides Kiro through a structured 3-step log search workflow (Discover → Sample → Targeted Query) and covers logs, alerts, SIEM insights, detection rules, and dashboards.
 
 ---
 

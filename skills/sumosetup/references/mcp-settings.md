@@ -13,19 +13,45 @@ Describe state and actions in plain language ("the Sumo Logic MCP server is not 
 
 Emit only what the current step instructs. Do not add setup tips, follow-ups, or "helpful" notes from general knowledge of the AI client. When the user needs to reload or re-authenticate, the skill emits that instruction at the correct step.
 
+**Exception — Kiro IDE:** The Kiro first-time setup branch requires showing the user specific file paths (`~/.kiro/settings/mcp.json` and the workspace-scoped fallback) so they can edit the file manually, since Kiro protects it from agent writes. Showing these paths in the Kiro branch is intentional and does not violate this rule.
+
 ## Determine `sumo-server-state`
 
 Silently determine the state of the `sumo-logic` MCP server using **only** the steps below. Do not use any other source of information (status files, cached state, error messages from previous calls):
 
 1. Try a lightweight MCP call on `sumo-logic` (e.g. list tools or read a resource).
 2. If the server returns actual Sumo Logic data (tools, resources, or content) -> state is **working**.
-3. If the call fails or returns empty/generic content, silently read the registration file. Check for the literal string `not-setup`:
-   - If the file contains `not-setup` -> state is **not-setup**.
-   - Otherwise -> state is **not-working**.
+3. If the call fails or returns empty/generic content:
+   - **In Kiro IDE**: silently read `~/.kiro/settings/mcp.json`. If `sumo-logic` is present under the top-level `mcpServers` key -> state is **not-working**. If absent, also check `<workspace>/.kiro/settings/mcp.json` (the workspace-scoped fallback). If `sumo-logic` is present there -> state is **not-working**. If absent from both files -> state is **not-setup**.
+   - **In other clients**: silently read the registration file (see below). Check for the literal string `not-setup`: if found -> state is **not-setup**. Otherwise -> state is **not-working**.
 
 Do not tell the user which state was determined, what was checked, or what was found. Follow the skill's instructions for that state.
 
-## MCP registration file: `mcp.json`
+## Kiro IDE: registration file
+
+In Kiro, the active MCP configuration lives in `~/.kiro/settings/mcp.json` under the top-level `mcpServers` key. Kiro also reads the power's own `mcp.json` and **registers and attempts to connect** the server defined there — this is why a second, power-managed entry (named `power-<power-name>-sumo-logic`) appears in the MCP Servers panel alongside the user-level `sumo-logic` entry. That power-managed entry will always fail to authenticate due to missing OAuth config and a known Kiro OAuth limitation (CIMD not supported). It can be ignored.
+
+**Important:** Kiro protects `~/.kiro/settings/mcp.json` from agent writes. If the agent cannot edit the file, show the user **only** the `sumo-logic` server entry (not the full file) and ask them to merge it into the `mcpServers` object in their existing file. Never dump the full file contents — the user may have other servers configured that must not be overwritten.
+
+A workspace-scoped fallback is also valid: `<workspace>/.kiro/settings/mcp.json`. If setup used this path instead of the user-level file, the `sumo-server-state` check must look for `sumo-logic` in **both** files — user-level first, then workspace-scoped. If found in either, the server is considered configured.
+
+The correct entry format for Kiro (no `"type"` field):
+
+```json
+{
+  "mcpServers": {
+    "sumo-logic": {
+      "url": "https://<mcp-domain>/mcp",
+      "oauth": {
+        "clientMetadataUrl": "https://<mcp-domain>/oauth/kiro-client-metadata",
+        "redirectUri": "http://localhost:8890/oauth/callback"
+      }
+    }
+  }
+}
+```
+
+## Other clients: registration file `mcp.json`
 
 The registration file is at `<plugin-root>/mcp.json`. If `<plugin-root>` is not already known, derive it from this markdown file's path by removing `skills/sumosetup/references/mcp-settings.md` from the end.
 
