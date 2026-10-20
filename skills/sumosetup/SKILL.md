@@ -151,10 +151,7 @@ If there is no registration file or no `not-setup` sentinel (the server is confi
    > 3. Select **Authenticate** — a browser window will open for you to log in with your Sumo Logic credentials
    > 4. After authentication, run `/mcp` again to confirm the server shows as **connected**
    >
-   > If `sumo-logic` does not appear in the server list, install the plugin first:
-   > ```
-   > /plugin install sumologic-mcp@claude-community
-   > ```
+   > If `sumo-logic` does not appear in the server list, install the plugin first. In Claude Code, run `/plugins` and search for `sumologic-mcp`. In Claude Cowork, go to **Customize** → **Plugins** → **Discover** and search for `sumologic-mcp`.
 
    Then stop. Do not attempt any MCP calls until the user confirms the server is connected.
 

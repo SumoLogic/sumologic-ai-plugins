@@ -101,15 +101,15 @@ Or invoke the investigation skill directly:
 
 ---
 
-## Claude Code
+## Claude Code and Claude Cowork
 
 ### Installation
 
-```
-/plugin install sumologic-mcp@claude-community
-```
+**Claude Code:** run `/plugins` and search for `sumologic-mcp`, then install it.
 
-On first enable, Claude Code prompts for your MCP Server URL from the table above.
+**Claude Cowork:** go to **Customize** → **Plugins** → **Discover**, search for `sumologic-mcp`, and add it.
+
+On first enable, you are prompted for your MCP Server URL from the table above.
 
 ### Authentication
 
@@ -169,20 +169,6 @@ List dashboards related to kubernetes
 ```
 
 ---
-
-## Development
-
-Test the Claude Code plugin locally:
-
-```bash
-claude --plugin-dir .
-```
-
-Validate before submission:
-
-```bash
-claude plugin validate .
-```
 
 ## Privacy & Support
 
