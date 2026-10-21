@@ -1,6 +1,8 @@
 {
   "name": "sumologic-mcp",
-  "version": "1.0.0",
+  "displayName": "Sumo Logic",
+  "icon": "./logo.png",
+  "version": "1.0.2",
   "description": "Sumo Logic observability for Claude Code. Investigate logs, analyze incidents, check alerts, review security insights, and manage dashboards using the Sumo Logic MCP server.",
   "author": {
     "name": "Sumo Logic",
