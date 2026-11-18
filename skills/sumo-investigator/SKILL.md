@@ -2,7 +2,7 @@
 name: sumo-investigator
 description: Sumo Logic investigation skill for the Sumo Logic MCP server. Answers questions about the user's systems and security with evidence from their own Sumo Logic org: logs, metrics, alerts, Cloud SIEM insights, detection rules and dashboards. Load it before calling any Sumo Logic tool.
 when_to_use: When the user asks about errors, incidents, outages, latency, root cause, suspicious activity, alerts, monitors, metrics or ingestion in systems that send data to Sumo Logic; asks to search logs, query metrics, or create or change a dashboard or detection rule; or mentions Sumo Logic or Sumo.
-allowed-tools: runLogSearch getLogSearchEstimatedUsageByMeteringType listPartitions listCustomFields listExtractionRules runMetricsQueries searchDimensions searchValuesWithinDimension alertsSearch alertsReadById getInsights getInsight getAllInsights getRules getRule listDashboards getDashboard
+allowed-tools: runLogSearch getLogSearchEstimatedUsageByMeteringType listPartitions listCustomFields listExtractionRules runMetricsQueries searchDimensions searchValuesWithinDimension alertsSearch alertsReadById getInsights getInsight getAllInsights getRules getRule listDashboards getDashboard createDashboard updateDashboard createTemplatedMatchRule createThresholdRule updateInsightAssignee updateInsightStatus
 ---
 
 # Sumo Logic Investigation Agent
