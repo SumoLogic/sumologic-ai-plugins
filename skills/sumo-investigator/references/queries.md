@@ -76,7 +76,7 @@ _sourceCategory=(cat1 OR cat2 OR cat3) <keyword> | count by _sourceCategory | so
 | Errors | Sample to learn the error shape → filter → `count by error_type, service` |
 | Performance | Find the latency field in the sample → `timeslice` + `pct(field, 95)` → locate slow buckets |
 | Trends | `timeslice` aggregate; split the range if it exceeds 2 days, then compare periods |
-| Resource / capacity | Look for resource and capacity signals in the logs (for example OOM, throttling, saturation messages) and say when metrics would be needed |
+| Resource / capacity | Metrics questions go to Mobot, since this skill has no direct metrics tool; from logs, look for resource signals such as OOM, throttling or saturation messages |
 | Alert triage | `alertsSearch` → `alertsReadById` → re-run the monitor's own query pattern against logs |
 | Unfamiliar source | `logreduce` first to learn the message families before filtering |
 

@@ -1,14 +1,16 @@
 ---
 name: sumo-investigator
-description: Sumo Logic investigation skill for the Sumo Logic MCP server. Answers questions about the user's systems and security with evidence from their own Sumo Logic org: logs, alerts, Cloud SIEM insights, detection rules and dashboards. Load it before calling any Sumo Logic tool.
-when_to_use: When the user asks about errors, incidents, outages, latency, root cause, suspicious activity, alerts, monitors or ingestion in systems that send data to Sumo Logic; asks to search logs, create or change a dashboard or detection rule; or mentions Sumo Logic or Sumo.
-allowed-tools: runLogSearch listPartitions listCustomFields listExtractionRules alertsSearch alertsReadById getInsights getInsight getAllInsights getRules getRule listDashboards getDashboard createDashboard updateDashboard createTemplatedMatchRule createThresholdRule updateInsightAssignee updateInsightStatus
+description: Sumo Logic investigation skill for the Sumo Logic MCP server. Answers questions about the user's systems and security with evidence from their own Sumo Logic org — logs, alerts, Cloud SIEM insights, detection rules and dashboards, and metrics and tracing through Mobot. Load it before calling any Sumo Logic tool.
+when_to_use: When the user asks about errors, incidents, outages, latency, root cause, suspicious activity, alerts, monitors, metrics or ingestion in systems that send data to Sumo Logic; asks to search logs, or create or change a dashboard or detection rule; or mentions Sumo Logic, Sumo or Mobot.
+allowed-tools: runLogSearch listPartitions listCustomFields listExtractionRules alertsSearch alertsReadById getDashboard listDashboards getInsights getInsight getAllInsights updateInsightAssignee updateInsightStatus getRules getRule createTemplatedMatchRule createThresholdRule createDashboard updateDashboard mobot_invoke mobot_poll mobot_cancel
 ---
 
 # Sumo Logic Investigation Agent
-This skill helps answer operational and security questions with evidence from the user's Sumo Logic platform: logs, alerts, Cloud SIEM insights, detection rules and dashboards. It works with the Sumo Logic MCP server, so the tools below come from the user's own deployment and org, and what they can see depends on the user's permissions.
+This skill helps answer operational and security questions with evidence from the user's Sumo Logic platform: logs, alerts, Cloud SIEM insights, detection rules and dashboards, plus metrics and tracing through Mobot. It works with the Sumo Logic MCP server, so the tools below come from the user's own deployment and org, and what they can see depends on the user's permissions.
 
-Use the direct tools below (log search, alerts, insights, rules, dashboards). They give exact control, and each has a workflow.
+There are two ways to answer, and the skill picks between them:
+- **Direct tools** (log search, alerts, insights, rules, dashboards). They give exact control and cost no investigation quota, so use them for any specific question. Each has a workflow below.
+- **Mobot**, Sumo Logic's AI investigation agent. Use it for open-ended or cross-signal questions and anything the direct tools can't reach, such as metrics, tracing, ingestion volume, monitors and collector health. It spends the user's limited daily quota. See Mobot below.
 
 Two rules apply throughout:
 - **Explore before declining.** If a question might be answerable from platform data, run the discovery workflow first, and only say no once you've looked and confirmed the data isn't there.
@@ -16,11 +18,11 @@ Two rules apply throughout:
 
 ## Connect the logs to the code
 
-Sumo Logic holds what the code does in production, and the repository holds why. Linking the two is what makes an investigation useful: it turns a log line or alert into the code path behind it, and lets each log search build on what the code already showed.
+Sumo Logic holds what the code does in production, and the repository holds why. Linking the two is what makes an investigation useful: it turns a log line, alert or Mobot finding into the code path behind it, and lets each Mobot turn, log search and metrics query build on what the code already showed.
 
 The logs you search often come from code in the user's current working directory. When the question is about a service that lives in that code, use it on both ends of the investigation.
 
-- **Before querying:** look in the relevant code for the log messages, logger names, error and exception classes, service names and source categories it emits. Use them to build a precise query.
+- **Before querying:** look in the relevant code for the log messages, logger names, error and exception classes, service names and source categories it emits. Use them to build a precise query, or to write a precise Mobot question. Mobot searches platform data, not code, so pass it these signals in plain words rather than code snippets.
 - **After results come back:** map each finding to where it comes from in the code, such as the line that logs the message or the path that throws the error. Use that to confirm or rule out a cause.
 
 Keep the code search scoped. Start from files the user referenced or the service in the question. If you can't tell where it lives, ask the user which file or folder holds it, or go ahead without code signals, rather than scanning the whole tree. If the code has nothing to do with the question, skip this step.
@@ -42,6 +44,24 @@ Keep the code search scoped. Start from files the user referenced or the service
 - **Dates in this skill and its references are placeholders.** Always compute the real ISO
   8601 range from the current date in context — never copy a literal date out of an example.
 
+## Mobot
+Mobot is Sumo Logic's AI investigation agent. It has its own pre-built tools across logs, metrics, dashboards, monitors, alerts and Cloud SIEM, and it keeps multi-turn context. Use it for open-ended or cross-signal questions, or ones this skill has no tool for. Each investigation uses the user's limited daily quota, so use the direct tools for anything narrow.
+
+### One conversation per investigation
+Keep using a single `conversation_id` for the whole investigation and send every follow-up as another turn in it. Mobot manages tokens and holds the multi-turn context, so prior findings carry forward without you restating them. Start a new conversation only when you genuinely need to: the user changes topic or platform surface, or the old conversation has expired or can't be recovered. Don't open a new one just to rephrase, narrow or retry.
+
+### Tools
+- `mobot_invoke` starts an investigation and returns `conversation_id` and `message_id` right away. It spends the user's quota, so confirm with the user first. If the status is `rate_limited`, show the message as is and don't poll or retry before `reset_time`. If `quota_warning` is present, show it to the user.
+- `mobot_poll` reads progress and results. Pass `wait_seconds` of 10 to 20 so the user sees an update at least that often (a long wait looks like a hang), and pass back the returned `char_offset` so each poll returns only new text. Keep polling until the status is `completed`, `failed` or `cancelled`. Mobot runs are long, so after every poll you MUST show the user what Mobot did in it, including the Sumo Logic queries it ran with their time ranges and the tools it used, before you poll again. Describe Mobot's tools in plain words ("ran a metrics query"), the same as for the direct tools, not by their internal names. Never poll silently.
+- `mobot_cancel` stops a running investigation. Use it when the user asks to stop.
+- `submit_hitl_feedback` answers a tool call that Mobot has paused for approval (`mobot_poll` status `waiting_for_approval`). The decision is the user's, so don't answer it yourself. Show them `tool_name` and `tool_args` and ask, then pass their choice as `kind` (`accept`, `reject`, or `text` with custom instructions) along with that poll's `tool_call_id`. Mobot can pause again with a new `tool_call_id`, and each one needs its own decision. If it fails with `hitl_tool_call_mismatch`, that call is no longer pending, so poll again and ask about the one pending now.
+
+### Routing
+Route on how well-scoped the user's prompt is and which tools can answer it. Direct tools cost no quota and give exact control, so prefer them whenever the question is specific.
+- **Mobot:** vague, exploratory or open-ended asks ("why are errors spiking?", "investigate", "debug"), and anything this skill has no tool for: metrics, tracing, ingestion or data volume, monitors, collector or OTel health.
+- **Direct:** everything specific. That means simple lookups ("HTTP 500s in the last 15 min"), aggregations, field filters and structured queries, follow-ups that need precise control (`timeslice`, `parse`, `transaction`), and alerts, insights, detection rules and dashboards.
+
+Note: If Mobot's quota is exhausted, tell the user and fall back to the direct tools. Mobot is not enabled for every org: if the Mobot tools are not available, use the direct tools, and say that metrics, tracing and similar questions need Mobot.
 
 ## Log search workflow
 
@@ -66,7 +86,6 @@ the appropriate aggregation. Obey the limit / `nodrop` / bounding rules in Gotch
 
 Query shapes, operators, per-domain strategies, and what to do when a query returns nothing:
 `references/queries.md`.
-
 
 ## Security questions
 
