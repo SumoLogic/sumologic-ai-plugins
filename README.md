@@ -55,7 +55,7 @@ Are there any critical security insights from today?
 List my dashboards
 ```
 
-The `sumo-investigator` skill guides Kiro through a structured 3-step log search workflow (Discover → Sample → Targeted Query) and covers logs, alerts, SIEM insights, detection rules, and dashboards.
+The `sumo-investigator` skill guides Kiro through a structured 3-step log search workflow (Discover → Sample → Targeted Query) and covers logs, alerts, SIEM insights, detection rules, and dashboards, and hands open-ended questions (metrics, tracing, root cause) to Mobot where it is enabled.
 
 ---
 
@@ -156,7 +156,7 @@ claude mcp add --scope user --transport http \
 /sumologic-mcp:sumo-investigator show me triggered alerts for the collector service
 ```
 
-The skill follows a structured 3-step workflow (Discover → Scoped Sample → Targeted Query) and covers logs, alerts, SIEM insights, detection rules, and dashboards.
+The skill follows a structured 3-step workflow (Discover → Scoped Sample → Targeted Query) and covers logs, alerts, SIEM insights, detection rules, and dashboards, and hands open-ended questions (metrics, tracing, root cause) to Mobot where it is enabled.
 
 #### Direct Tool Use
 

@@ -5,7 +5,7 @@
   "privacyPolicyUrl": "https://www.sumologic.com/privacy-statement/",
   "supportUrl": "https://support.sumologic.com/",
   "documentationUrl": "https://www.sumologic.com/help/docs/api/mcp-server/",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Sumo Logic observability for Claude Code. Investigate logs, analyze incidents, check alerts, review security insights, and manage dashboards using the Sumo Logic MCP server.",
   "author": {
     "name": "Sumo Logic",
