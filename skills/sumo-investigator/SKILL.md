@@ -2,7 +2,7 @@
 name: sumo-investigator
 description: Sumo Logic investigation skill for the Sumo Logic MCP server. Answers questions about the user's systems and security with evidence from their own Sumo Logic org — logs, alerts, Cloud SIEM insights, detection rules and dashboards, and metrics and tracing through Mobot. Load it before calling any Sumo Logic tool.
 when_to_use: When the user asks about errors, incidents, outages, latency, root cause, suspicious activity, alerts, monitors, metrics or ingestion in systems that send data to Sumo Logic; asks to search logs, or create or change a dashboard or detection rule; or mentions Sumo Logic, Sumo or Mobot.
-allowed-tools: runLogSearch listPartitions listCustomFields listExtractionRules alertsSearch alertsReadById getDashboard listDashboards getInsights getInsight getAllInsights updateInsightAssignee updateInsightStatus getRules getRule createTemplatedMatchRule createThresholdRule createDashboard updateDashboard mobot_invoke mobot_poll mobot_cancel
+allowed-tools: runLogSearch listPartitions listCustomFields listExtractionRules alertsSearch alertsReadById getDashboard listDashboards getInsights getInsight getAllInsights getRules getRule mcp__plugin_sumologic-mcp_sumo-logic__mobot-server___mobot_invoke mcp__plugin_sumologic-mcp_sumo-logic__mobot-server___mobot_poll mcp__plugin_sumologic-mcp_sumo-logic__mobot-server___mobot_cancel
 ---
 
 # Sumo Logic Investigation Agent
